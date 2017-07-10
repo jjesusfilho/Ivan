@@ -1,0 +1,48 @@
+---
+title: "Ivan"
+author: "Ivan"
+date: "7/10/2017"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Metodologia
+
+
+
+
+## 
+
+```{r,echo=F,message=F}
+library(ggplot2)
+#library(cowplot)
+ggplot(unanimidade,aes(x=ano,y=percentual,group=unanime,color=orgao_julgador)) +
+  geom_line()+
+  #facet_wrap(~)
+  theme_minimal()+
+  theme(
+    axis.text.x = element_text(angle=45,size=5)
+  )
+
+```
+
+
+## Terceira Turma
+
+A terceira
+
+```{r,echo=F,message=F}
+library(ggplot2)
+#library(cowplot)
+ggplot(una3,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
+  geom_line()+
+  scale_color_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))
+  theme_minimal()+
+  theme(
+    axis.text.x = element_text(angle=45)
+  )
+
+```
