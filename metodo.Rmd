@@ -36,7 +36,7 @@ ggplot(unanimidade,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   #facet_wrap(~)
   theme_minimal()+
   theme(
-    axis.text.x = element_text(angle=45,size=5),
+    axis.text.x = element_text(angle=90,size=5),
     legend.position = "bottom"
   )
 
