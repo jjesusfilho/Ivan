@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Para acessar os dados, utilizamos técnicas de raspagem de dados na internet (webscraping).  Essa técnica constitui-se na criação de um programa de computador, mais especificacamente, uma rotina de comandos, com a tarefa de acessar a página do Tribunal de Justiça do Distrito Federal e Baixar todos os dados. Essa rotina, função, roda no software R e pode ser acessada pelo [link](https://github.com/jjesusfilho/Ivan/blob/master/funcao_baixar_acordaos.R)  
 
-Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.944 decisões sobre homicídio, roubo e tráfico de drogas. Esses crimes foram escolhidos porque compõem a maioria dos crimes que levam ao julgamento sobre a materialidade do crime e autoria. 
+Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.944 decisões sobre homicídio, roubo e tráfico de drogas. Esses crimes foram escolhidos porque compõem a maioria dos crimes que levam ao julgamento sobre a materialidade do crime e autoria. Depois disso, 
 
 ```{r,echo=F,message=F}
 load("~/R/Ivan/ivan/data/base.rda")
@@ -25,6 +25,22 @@ load("~/R/Ivan/ivan/data/base.rda")
 
 
 ```{r,echo=F,message=F}
+
+df<-readRDS("~/R/Ivan/ivan/data/base_completa.rds")
+df_turmas<-df[str_which(df$orgao_julgador,"\\d+"),]
+
+unanimidade<-df_turmas %>% dplyr::count(ano,unanime)
+
+unanimidade<-unanimidade %>% dplyr::group_by(ano) %>% 
+  mutate(percentual=round(n*100/sum(n),digits=2))
+
+df3<-df_turmas %>% filter(orgao_julgador=="3ª turma criminal")
+
+una3<-df3 %>% dplyr::count(ano,unanime)
+
+una3<-una3 %>% group_by(ano) %>% 
+  mutate(percentual=round(n*100/sum(n),digits=3))
+
 
 
 ```
