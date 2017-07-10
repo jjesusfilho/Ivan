@@ -14,9 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Metodologia
 
 
-Para acessar os dados, utilizamos técnicas de raspagem de dados na internet (webscraping).  Essa técnica constitui-se na criação de um programa de computador, mais especificacamente, uma rotina de comandos, com a tarefa de acessar a página do Tribunal de Justiça do Distrito Federal e Baixar todos os dados. Essa rotina, função, roda no software R e pode ser acessada [link](https://github.com/jjesusfilho/Ivan/blob/master/funcao_baixar_acordaos.R)  
+Para acessar os dados, utilizamos técnicas de raspagem de dados na internet (webscraping).  Essa técnica constitui-se na criação de um programa de computador, mais especificacamente, uma rotina de comandos, com a tarefa de acessar a página do Tribunal de Justiça do Distrito Federal e Baixar todos os dados. Essa rotina, função, roda no software R e pode ser acessada pelo [link](https://github.com/jjesusfilho/Ivan/blob/master/funcao_baixar_acordaos.R)  
 
-Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.944 decisões sobre homicídio, roubo e tráfico de drogas. Esses crimes foram escolhidos porque compõem a maioria dos crimes que levam ao julgamento sobre condenação. 
+Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.944 decisões sobre homicídio, roubo e tráfico de drogas. Esses crimes foram escolhidos porque compõem a maioria dos crimes que levam ao julgamento sobre a materialidade do crime e autoria. 
 
 ```{r,echo=F,message=F}
 load("~/R/Ivan/ivan/data/base.rda")
@@ -36,7 +36,8 @@ ggplot(unanimidade,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   #facet_wrap(~)
   theme_minimal()+
   theme(
-    axis.text.x = element_text(angle=45,size=5)
+    axis.text.x = element_text(angle=45,size=5),
+    legend.position = "bottom"
   )
 
 ```
@@ -53,7 +54,9 @@ ggplot(una3,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   scale_color_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
   theme_minimal()+
   theme(
-    axis.text.x = element_text(angle=45)
+    axis.text.x = element_text(angle=45),
+        legend.position = "bottom"
+
   )
 
 ```
