@@ -1,5 +1,5 @@
 ---
-title: "Ivan"
+title: "Análise das decisões do Tribunal de Justiça "
 author: "Ivan"
 date: "7/10/2017"
 output: word_document
@@ -46,7 +46,7 @@ ggplot(unanimidade[unanimidade$ano>2009,],aes(x=as.factor(ano),y=n,group=unanime
   geom_bar(stat="identity",position="dodge")+
    scale_fill_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
   geom_text(aes(label=n),position=position_dodge(width=0.9), vjust=-0.25)+
-  labs(x="Anos",y="Percentual de votos",title="Votos das turmas criminais do Tribunal de Justiça do DF",caption="Fonte: TJDFT")+
+  labs(x="Anos",y="Percentual de votos",caption="Fonte: TJDFT")+
   theme(
         legend.position = "bottom"
   )
@@ -59,7 +59,7 @@ ggplot(unanimidade[unanimidade$ano>2009,],aes(x=as.factor(ano),y=n,group=unanime
 ggplot(unanimidade,aes(x=as.factor(ano),y=percentual,group=unanime,color=unanime)) +
   geom_line()+
     scale_color_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
-  labs(x="anos",y="Percentual de votos",title="Votos das três turmas criminais do Tribunal de Justiça do DF",caption="Fonte: TJDFT")+
+  labs(x="anos",y="Percentual de votos",caption="Fonte: TJDFT")+
   #facet_wrap(~)
   theme_minimal()+
   theme(
@@ -79,7 +79,7 @@ A Terceira Turma foi criada em 2012. É a mais nova e aquela que apresenta mais 
 ggplot(una3,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   geom_line()+
   scale_color_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
-  labs(x="anos",y="Percentual de votos",title="Votos da terceira turma criminal do Tribunal de Justiça do DF",caption="Fonte: TJDFT")+
+  labs(x="anos",y="Percentual de votos",caption="Fonte: TJDFT")+
   theme_minimal()+
   theme(
     axis.text.x = element_text(angle=45),
