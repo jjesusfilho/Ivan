@@ -20,9 +20,14 @@ Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.9
 
 ```{r,echo=F,message=F}
 load("~/R/Ivan/ivan/data/base.rda")
-
 ```
 
+
+
+```{r,echo=F,message=F}
+
+
+```
 
 
 ## 
@@ -36,7 +41,7 @@ ggplot(unanimidade,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   #facet_wrap(~)
   theme_minimal()+
   theme(
-    axis.text.x = element_text(angle=90,size=5),
+    axis.text.x = element_text(angle=45),
     legend.position = "bottom"
   )
 
