@@ -1,10 +1,16 @@
 library(stringr)
 library(stringi)
-a<-readRDS("roubo1.rds")
-b<-readRDS("roubo2.rds")
-d<-readRDS("roubo3.rds")
-df<-rbind(a,b,d[1:8])
-rm(a,b,d)
+
+h<-readRDS("homicidio.rds")
+drogas<-readRDS("trafico.rds")
+
+h$crime<-"homicidio"
+drogas$crime<-"trafico"
+roubo<-df[1:8]
+roubo$crime<-"roubo"
+
+df<-rbind(h,roubo,drogas)
+df<-unique(df)
 
 df$orgao_julgador<-stri_trans_general(df$orgao_julgador,"Latin-ASCII")
 
@@ -21,7 +27,7 @@ df$ano<-str_extract(df$data_julgamento,"\\d{4}")
 
 df_turmas<-df[str_which(df$orgao_julgador,"\\d+"),]
 
-unanimidade<-df_turmas %>% dplyr::count(ano,unanime,orgao_julgador)
+unanimidade<-df %>% dplyr::count(ano,unanime)
 
 unanimidade<-unanimidade %>% dplyr::group_by(ano) %>% 
   mutate(percentual=round(n*100/sum(n),digits=2))

@@ -18,6 +18,8 @@ Para acessar os dados, utilizamos técnicas de raspagem de dados na internet (we
 
 Para a análise, foram baixados do Tribunal de Justiça do Distrito Federal 77.944 decisões sobre homicídio, roubo e tráfico de drogas. Esses crimes foram escolhidos porque compõem a maioria dos crimes que levam ao julgamento sobre a materialidade do crime e autoria. Depois disso, os dados foram manuseados e limpados para posterior análise. Foram mantidos somente os casos de apelação criminal. Além disso, como são poucos os casos anteriores a 1992, preferimos manter somente as decisões de 1992 a 2017. Ao final, o número baixou para 75.653 casos. Segue abaixo um gráfico com os respectivos valores ano a ano. 
 
+Fica absolutamente evidente que a unanimidade predomina nas decisões. Por outro lado, não se pode afirmar que a unanimidade tende a aumentar para todas as turmas criminais. Do gráfico em que constam as proporções dos votos, é possível verificar que o percentual de votação por maioria em oposição à uninimidade não segue padrão algum. Isso, não obstante, não se aplica à terceira turma, onde a uninimidade tende assumir a totalidade dos votos.
+
 
 ```{r,echo=F,message=F}
 
@@ -46,10 +48,25 @@ ggplot(unanimidade[unanimidade$ano>2009,],aes(x=as.factor(ano),y=n,group=unanime
   geom_bar(stat="identity",position="dodge")+
    scale_fill_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
   geom_text(aes(label=n),position=position_dodge(width=0.9), vjust=-0.25)+
-  labs(x="Anos",y="Percentual de votos",caption="Fonte: TJDFT")+
+  labs(x="Anos",y="Número de votos",caption="Fonte: TJDFT")+
   theme(
         legend.position = "bottom"
   )
+  
+```
+
+
+```{r,echo=F,message=F}
+
+ggplot(unanimidade[unanimidade$ano>2000,],aes(x=as.factor(ano),y=percentual,fill=unanime))+
+  geom_col(position="stack")+
+   scale_fill_discrete(name="Votação",labels=c("Maioria","Unânime"))+
+  geom_text(aes(label=round(100-percentual,1)),vjust=-.5,size=3)+
+  labs(x="Anos",y="Proporção de votos",caption="Fonte: TJDFT")+
+  theme(
+        axis.text.x = element_text(angle=45,size=7),
+
+       legend.position = "bottom")
   
 ```
 
@@ -72,7 +89,7 @@ ggplot(unanimidade,aes(x=as.factor(ano),y=percentual,group=unanime,color=unanime
 
 ## Terceira Turma
 
-A Terceira Turma foi criada em 2012. É a mais nova e aquela que apresenta mais clara variação nos dados.
+A Terceira Turma foi criada em 2012. É a mais nova e aquela que apresenta mais clara variação nos dados. Do gráfico abaixo, verifica-se que a unanimidade tende a ser maior a cada ano. Os votos por maioria se aproximam de zero a cada ano, enquanto que a votação por unanimidade se aproxima de 100%.  
 
 ```{r echo=F, message=F}
 
