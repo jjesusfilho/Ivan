@@ -7,6 +7,24 @@ output: word_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(pander)
+panderOptions('table.alignment.default', function(df)
+    ifelse(sapply(df, is.numeric), 'right', 'left'))
+panderOptions('table.split.table', Inf)
+panderOptions('big.mark', ",")
+panderOptions('keep.trailing.zeros', TRUE)
+
+library(forecast)
+library(sweep)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(cowplot)
+library(tidyquant)
+library(timekit)
+
+
 ```
 
 
@@ -39,11 +57,26 @@ una3<-df3 %>% dplyr::count(ano,unanime)
 una3<-una3 %>% group_by(ano) %>% 
   mutate(percentual=round(n*100/sum(n),digits=3))
 
+una<-df %>% 
+  filter(orgao_julgador=="3ª turma criminal") %>% ## Use este para trabalhar somente com a terceira turma
+  #filter(ano>2005) %>% ## Use este para trabalhar com todas as turmas.
+  group_by(mes) %>%
+  count(unanime)
+
+una<-una %>% 
+  group_by(mes) %>% 
+  mutate(freq=n*100/sum(n))
+
+una<-spread(una,unanime,freq)
+una<-na.omit(una[-3])
+
+
+s<-ts(una$sim,start=c(2012,1),frequency=12) ## Troque para 2006 para trabalhar com todas as turmas.
+
+
 ```
 
 ```{r,echo=F,message=F}
-library(ggplot2)
-library(cowplot)
 ggplot(unanimidade[unanimidade$ano>2009,],aes(x=as.factor(ano),y=n,group=unanime,fill=unanime))+
   geom_bar(stat="identity",position="dodge")+
    scale_fill_discrete(name="Votação",labels=c("Maioria","Unânime"),guide=guide_legend(reverse=T))+
@@ -58,7 +91,7 @@ ggplot(unanimidade[unanimidade$ano>2009,],aes(x=as.factor(ano),y=n,group=unanime
 
 ```{r,echo=F,message=F}
 
-ggplot(unanimidade[unanimidade$ano>2000,],aes(x=as.factor(ano),y=percentual,fill=unanime))+
+ggplot(unanimidade,aes(x=as.factor(ano),y=percentual,fill=unanime))+
   geom_col(position="stack")+
    scale_fill_discrete(name="Votação",labels=c("Maioria","Unânime"))+
   geom_text(aes(label=round(100-percentual,1)),vjust=-.5,size=3)+
@@ -86,6 +119,19 @@ ggplot(unanimidade,aes(x=as.factor(ano),y=percentual,group=unanime,color=unanime
 
 ```
 
+## Análise da série temporal das turmas e câmara criminais
+
+O gráfico abaixo mostra a série temporal dos votos por unanimidade da terceira turma ao longo dos anos. 
+
+```{r,echo=F,message=F}
+una %>%
+    ggplot(aes(x = mes, y = sim)) +
+    geom_line(alpha = 0.5, color = palette_light()[[1]]) +
+    labs(title = "Distribuição percentual do voto unânime ao longo do tempo", y = "Percentual voto unânime",x="Ano") +
+    theme_tq()
+
+```
+
 
 ## Terceira Turma
 
@@ -105,3 +151,28 @@ ggplot(una3,aes(x=ano,y=percentual,group=unanime,color=unanime)) +
   )
 
 ```
+
+####  Análise da série temporal da Terceira Turma
+
+O gráfico abaixo mostra a dinâmica 
+
+```{r echo=F, message=F}
+
+seasonplot(s,ylab="percentual", xlab="Meses", 
+           main="Sazonalidade na unanimidade nas decisões da 3ª Turma",
+           year.labels=TRUE, year.labels.left=TRUE, col=1:6, pch=19)
+```
+
+
+## Valores previstos (futuros) para unanimidade nas votaçãos da terceira turma
+
+
+
+```{r echo=F, message=F,warning=F}
+p<-auto.arima(s)
+turma_previsao<-forecast(p)
+turma_previsao <- sw_sweep(turma_previsao, timekit_idx = TRUE, rename_index = "date")
+turma_previsao$key<-ifelse(turma_previsao$key=="actual","real","previsto")
+pander(turma_previsao)
+```
+
